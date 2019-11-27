@@ -1,3 +1,5 @@
+// Root top level application file.
+
 import React from 'react';
 
 import Layout from "./Layout";
