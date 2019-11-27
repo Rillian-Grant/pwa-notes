@@ -1,3 +1,7 @@
+# PWA Notes
+A progressive web app that stores notes in localStorage
+
+# create-react-app default:
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
