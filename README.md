@@ -1,6 +1,11 @@
 # PWA Notes
 A progressive web app that stores notes in localStorage
 
+### Notes
+Before any pre-release my commits will be less professional
+  - Main commits will have full discriptions
+  - Other commits such as changeing README.md or TODO will have basic discriptions (e.g. "Edited README.md")
+
 # create-react-app default:
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
