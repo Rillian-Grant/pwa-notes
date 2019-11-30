@@ -20,12 +20,18 @@ function putList(list) {
 function put(title, contents) {
     // Get list
     var list = getList();
-    // Save note
-    localStorage.setItem(title, contents);
-    // Add note to list of notes
-    list.append(title);
-    // Save list
-    putList(list);
+    // If note does not already exsist
+    if (list.includes(title) === false) {
+        // Save note
+        localStorage.setItem(title, contents);
+        // Add note to list of notes
+        list.push(title);
+        // Save list
+        putList(list);
+    } else {
+        // Do something better here
+        console.log("Note already exsists")
+    }
 }
 
 function get(title) {

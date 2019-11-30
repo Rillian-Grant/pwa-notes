@@ -12,9 +12,22 @@ import Main from "./sections/main";
 import Sidebar from "./sections/sidebar";
 
 class Layout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // This varable will be used to store the name of the current note
+      currentNote: null,
+    }
+    // Make sure changeCurrentNote has acess to this object's "this" object
+    this.changeCurrentNote = this.changeCurrentNote.bind(this)
+  }
+
   // Runs when a note is clicked in the sidebar
-  handleSidebarNoteSelectionClick(eventKey) {
-    console.log(eventKey);
+  // Takes the name of a note as a paramiter
+  changeCurrentNote(name) {
+    this.setState({
+      currentNote: name,
+    });
   }
 
   // Splits the screen into one third sidebar and two thirds main
@@ -22,8 +35,23 @@ class Layout extends React.Component {
     return (
       <Container fluid={true}>
         <Row>
-          <Col sm={4}><Sidebar onItemClick={this.handleSidebarNoteSelectionClick} /></Col>
-          <Col sm={8}><Main /></Col>
+          <Col sm={4}>
+            <Sidebar
+              // When  a note is clicked
+              onItemClick={this.changeCurrentNote}
+              // When a new note is created or the current one is deleated
+              changeCurrentNote={this.changeCurrentNote}
+              // The current note
+              note={this.state.currentNote}
+            />
+          </Col>
+          
+          <Col sm={8}>
+            <Main
+              // the current note
+              note={this.state.currentNote}
+            />
+          </Col>
         </Row>
       </Container>
     );

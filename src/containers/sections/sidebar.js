@@ -17,11 +17,11 @@ class Sidebar extends React.Component {
             // onClick is a function that calls another function that was passed down from Layout.js. This enables us to pass it the titleof the note that this menu item is about because the arrow syntax outer function is ddefined here and therefore has acess to this classe's varables which it can then pass to the function from Layout.js.
             return (
             <>
-                    <AddNewButton callback={value => alert(value)}></AddNewButton>
-                <hr />
                 <Nav.Link
                     eventKey={value}
                     onClick={() => {this.props.onItemClick(value)}}
+                    // If this note is the current note (defined by Layout) add the class active
+                    className={(value === this.props.note) ? "active" : ""}
                 >
                     {value}
                 </Nav.Link>
@@ -34,6 +34,15 @@ class Sidebar extends React.Component {
         return(
             <div id="list">
                 <Nav className="flex-column" fill variant="pills">
+                    <AddNewButton
+                        // Define a simple callback
+                        callback={value => {
+                            storage.put(value, "");
+                            this.props.changeCurrentNote(value);
+                        }}
+                    >
+                    </AddNewButton>
+                    <hr />
                     {this.itemList()}
                 </Nav>
             </div>
