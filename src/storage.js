@@ -5,7 +5,6 @@ function getList() {
     // list is null if it doesn't exsist
     var list = JSON.parse(localStorage.getItem("_list"));
     if (list === null) {
-        console.log("Couldn't get the list of notes. Creating new")
         list = [];
     }
 
@@ -20,8 +19,8 @@ function putList(list) {
 function put(title, contents) {
     // Get list
     var list = getList();
-    // If note does not already exsist
-    if (list.includes(title) === false) {
+    // If note does not already exsists
+    if (!badNoteName(title)) {
         // Save note
         localStorage.setItem(title, contents);
         // Add note to list of notes
@@ -30,8 +29,16 @@ function put(title, contents) {
         putList(list);
     } else {
         // Do something better here
-        console.log("Note already exsists")
+        console.log("Note already exsists or bad note name")
     }
+}
+
+// This somewhat of a duplicate of the duplicate checker code in put()
+function badNoteName(title) {
+    // Get list
+    var list = getList();
+    // If note already exsists return true else false
+    return (list.includes(title) || title == null || title.length === 0 || title.trim().length === 0)
 }
 
 function get(title) {
@@ -44,4 +51,4 @@ function get(title) {
     }
 }
 
-export default { get, put, getList }
+export default { get, put, getList, badNoteName }

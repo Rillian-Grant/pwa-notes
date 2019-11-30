@@ -4,6 +4,12 @@ import React from "react";
 
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import Popover from "react-bootstrap/Popover";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+
+// An icon module
+import { Check, X } from "react-feather";
 
 import storage from "../../storage";
 
@@ -59,56 +65,131 @@ class AddNewButton extends React.Component {
         this.state = {
             // Possible modes: textbox, textbox-disabled, button/anything else
             mode: "button",
+            // True if the current value of #textbox is bad. It starts as true because "" is bad.
+            badName: true,
         };
 
         // .bind(value) copies it's parent function and returns a copy of it with it's this keyward set to value
         // You need to do this because the function is called outside the context of this class because the function was passed
         // onEvent={function} needs this. onEvent{() => function()} does not because the function was called here. You can tell because function() instead of just function
-        this.processEntry = this.processEntry.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     buttonClick() {
         this.setState({
             // Change mode to textbox and make sure that it's value is ""
             mode: "textbox",
-            value: "", 
+            value: "",
+            // True if the current value of #textbox is bad. It starts as true because "" is bad.
+            badName: true,
         });
     }
 
     // Called by onSubmit event
-    processEntry(event) {
+    handleSubmit(event) {
         // Don't do the standard GET request that usually happens when trigger onSubmit (by pressing Enter)
         event.preventDefault();
         // Makes react give me the full event object.
         // If I didn't do this event.target would be null. This is a menory saving feature.
         event.persist();
+
+        // this event is on the form object which contains the textbox so you need to find a child of it that has the tag textbox
+        const name = event.target.querySelector("#textbox").value;
         
-        // Disable the text box while the callback is doing it's thing
-        this.setState({
-            mode: "textbox-disabled",
-        });
-        this.props.callback(event.target.children[0].value)
-        // Reset to the starting state
+        // Only continue if the entered note name is not a bad note name
+        if (!storage.badNoteName(name)) {
+            // Disable the text box while the callback is doing it's thing
+            this.setState({
+                mode: "textbox-disabled",
+            });
+            // Callback
+            this.props.callback(name)
+            // Reset to the starting state
+            this.setState({
+                mode: "button",
+            });
+        }
+    }
+
+    // When the contents of the textbox changes
+    handleChange(event) {
+        event.persist();
+        // This event is on the textbox so you can find it's value directly
+        // Checks to see if the value is good or bad
+        if (storage.badNoteName(event.target.value)) {
+            this.setState({
+                badName: true,
+            });
+        } else {
+            this.setState({
+                badName: false,
+            });
+        }
+    }
+
+    // When the mouse clicks outside the textbox or you switch windows then this object goes back to being a button
+    handleBlur() {
         this.setState({
             mode: "button",
         });
     }
 
     render() {
+        // popover discribing the naming requirements. It is displayed when the name is bad.
+        const namingRequirementsPopover = (
+            <Popover id="popover-basic">
+              <Popover.Title as="h3">Naming requirements</Popover.Title>
+              <Popover.Content>
+                The name of the new note must be unique and not be comprised entierly of whitespace
+              </Popover.Content>
+            </Popover>
+        );
+
         if (this.state.mode === "textbox" || this.state.mode === "textbox-disabled") {
             return(
                 <Nav.Item
                     // Make this a form html object with Nav.Item classes
                     as="form"
-                    onSubmit={this.processEntry}
+                    onSubmit={this.handleSubmit}
                 >
-                    <Form.Control
-                        type="text"
-                        placeholder="New note"
-                        autoFocus
-                        // If disabled disabled=true
-                        disabled={(this.state.mode === "textbox-disabled")}
-                    />
+                    <InputGroup className="mb-3">
+                        <Form.Control
+                            // So that it can be easily found
+                            id="textbox"
+                            type="text"
+                           placeholder="New note"
+                            autoFocus
+                            // If disabled disabled=true
+                            disabled={(this.state.mode === "textbox-disabled")}
+                            onChange={this.handleChange}
+                            onBlur={this.handleBlur}
+                        />
+                        
+                        {this.state.badName
+                            // If badName has been set to true by handleChange..
+                            ? <OverlayTrigger
+                                // Dsiplay the popover to the right of the content contained within OverlayTrigger
+                                placement="right"
+                                // The popover html (defined above)
+                                overlay={namingRequirementsPopover}
+                                // No event set as the default is hover
+                              >
+                                <X
+                                    // red X icon
+                                    color="red"
+                                    size="45"
+                                />
+                              </OverlayTrigger>
+                            // Else...
+                            : <Check
+                                // Green check with no popover
+                                color="green"
+                                size="45"
+                              />
+                        }
+                    </InputGroup>
                 </Nav.Item>
             );
         } else {
@@ -117,8 +198,9 @@ class AddNewButton extends React.Component {
                     // Under score for stuff not generated by a for loop or similar
                     eventKey="_new"
                     onClick={() => {this.buttonClick()}}
+                    id="_buttonNew"
                 >
-                    Button
+                    New note
                 </Nav.Link>
             );
         }
