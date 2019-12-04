@@ -137,7 +137,7 @@ class AddNewButton extends React.Component {
     }
 
     // Every time this componant changes check to see if the button has class active and remove it
-    // PROBLEM: can't put id= on Nav.Link have to encase in a link.
+    // PROBLEM: can't put id= on Nav.Link have to encase in a div.
     // PROBLEM: Is there a better way.
     componentDidUpdate() {
         if (document.getElementById("_buttonNew") != null) {
