@@ -33,6 +33,16 @@ function put(title, contents) {
     }
 }
 
+function edit(title, contents) {
+    // Get list
+    var list = getList();
+    if (list.includes(title)) {
+        localStorage.setItem(title, contents);
+    } else {
+        console.log("Editing note " + title + " failed. No such note.")
+    }
+}
+
 // This somewhat of a duplicate of the duplicate checker code in put()
 function badNoteName(title) {
     // Get list
@@ -51,4 +61,4 @@ function get(title) {
     }
 }
 
-export default { get, put, getList, badNoteName }
+export default { get, put, getList, badNoteName, edit }
