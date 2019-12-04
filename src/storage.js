@@ -43,6 +43,24 @@ function edit(title, contents) {
     }
 }
 
+function deleteNote(title) {
+    var list = getList();
+    if (list.includes(title)) {
+        localStorage.removeItem(title);
+        // Remove from list the item with index returned by findIndex. The 1 is how many after that or somthing to remove.
+        // findIndex returns the index of the item that caused the function given to it to return true
+        list.splice(list.findIndex(element => element === title), 1)
+        putList(list)
+    } else {
+        console.log("Deleting note " + title + " failed. No such note.")
+    }
+}
+
+function doesNoteExsist(title) {
+    var list = getList();
+    return (list.includes(title))
+}
+
 // This somewhat of a duplicate of the duplicate checker code in put()
 function badNoteName(title) {
     // Get list
@@ -61,4 +79,4 @@ function get(title) {
     }
 }
 
-export default { get, put, getList, badNoteName, edit }
+export default { get, put, getList, badNoteName, edit, deleteNote, doesNoteExsist }

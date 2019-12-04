@@ -23,7 +23,7 @@ export default class Main extends React.Component {
     // This function is called when the props change. The object it returns becomes the new state.
     static getDerivedStateFromProps(nextProps, prevState) {
         // If the note has changed
-        if (prevState.currentNote !== nextProps.note) {
+        if (prevState.currentNote !== nextProps.note || !storage.doesNoteExsist(nextProps.note)) {
             // Change the current note to the new note and switch the mode to view
             // This is needed because the edit object needs to be recreated when the note changes. This function solves that by changing the mode to view meaning that if it was edit ti would now be changed
             return {
@@ -51,8 +51,8 @@ export default class Main extends React.Component {
     }
 
     render() {
-        // If there is a note selected
-        if (this.props.note != null) {
+        // If there is a note selected and that note exsists
+        if (this.props.note != null && storage.doesNoteExsist(this.props.note)) {
             // thing either the editor or the displayed note
             var thing
             if (this.state.mode !== "view") {
@@ -81,9 +81,9 @@ export default class Main extends React.Component {
                 </>
             )
         } else {
-            // If there is no note selected yet
+            // If there is no note selected yet or the selected note does not exsist
             return(
-                <h1>Pick a note</h1>
+                <h1>Chose or create a note</h1>
             )
         }
     }

@@ -13,6 +13,8 @@ import { Check, X } from "react-feather";
 
 import storage from "../../storage";
 
+import DeleteNoteButton from "../../componants/deleteNoteButton";
+
 class Sidebar extends React.Component {
     // Create an array of Nav.Link JSX objects (the list) with contents being the title of the notes aquired from storage.js
     itemList() {
@@ -30,6 +32,14 @@ class Sidebar extends React.Component {
                     className={(value === this.props.note) ? "active" : ""}
                 >
                     {value}
+                    <div
+                        // This makes the delete button appear to the right of the name of the note
+                        style={{
+                            float: "right"
+                        }}
+                    >
+                        <DeleteNoteButton note={value} />
+                    </div>
                 </Nav.Link>
             </>
             );
