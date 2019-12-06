@@ -37,7 +37,13 @@ export default class Editor extends React.Component {
     render() {
         return(
             <InputGroup>
-                <FormControl as="textarea" value={this.state.value} onChange={this.handleChange} placeholder="Start taking notes..." />
+                <FormControl
+                    as="textarea"
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    placeholder="Start taking notes..."
+                    autoFocus
+                />
             </InputGroup>
         );
     }
