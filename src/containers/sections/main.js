@@ -1,6 +1,7 @@
 import React from "react";
 
 import Editor from "../../componants/editor";
+import DisplayMarkdown from "../../componants/displayMarkdown";
 import storage from "../../storage";
 
 import Navbar from "react-bootstrap/Navbar";
@@ -58,7 +59,7 @@ export default class Main extends React.Component {
             if (this.state.mode !== "view") {
                 thing = <Editor note={this.props.note}></Editor>
             } else {
-                thing = <>{storage.get(this.props.note)}</>
+                thing = <DisplayMarkdown note={this.props.note}></DisplayMarkdown>
             }
 
             var switchModeButton
